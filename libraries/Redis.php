@@ -370,7 +370,8 @@ class CI_Redis {
 			}
 
 		}
-
+		// Remove the new line and carriage return before reading another bulk reply
+		fgets($this->_connection);
 		// Clear the socket in case anything remains in there
 		$this->_clear_socket();
 
@@ -392,17 +393,16 @@ class CI_Redis {
 		// Loop all values and add them to the response array
 		for ($i = 0; $i < $total_values; $i++)
 		{
-			// Remove the new line and carriage return before reading
-			// another bulk reply
+			// Remove the '$' flags
 			fgets($this->_connection, 2);
 
 			// If this is a second or later pass, we also need to get rid
 			// of the $ indicating a new bulk reply and its length.
-			if ($i > 0)
-			{
-				fgets($this->_connection);
-				fgets($this->_connection, 2);
-			}
+//			if ($i > 0)
+//			{
+//				fgets($this->_connection);
+//				fgets($this->_connection, 2);
+//			}
 
 			$response[] = $this->_bulk_reply();
 
